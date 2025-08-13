@@ -6,7 +6,7 @@
   <style>
     body {
       margin: 0;
-      background: #0b0a12;
+      background: #000;
       font-family: sans-serif;
       color: #fff;
       display: flex;
@@ -56,12 +56,24 @@
       max-width: 300px;
     }
 
-    button {
-      background: #fff;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-    }
+   button {
+  background: #f0e6d6;                /* beige papier */
+  color: #2d2b29;                     /* texte foncé */
+  font-weight: bold;
+  font-family: 'Georgia', serif;     /* police type document */
+  font-size: 18px;                   /* plus gros */
+  padding: 14px 24px;
+  border: 2px solid #b8aa92;         /* bord style papier */
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
 
     a.link {
       color: #fff;
