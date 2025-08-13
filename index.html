@@ -115,55 +115,62 @@
 <audio id="ambiance" src="SF-bureau.mp3" autoplay loop></audio>
   <script>
     let page = 1;
-    const img = document.getElementById("image");
-    const zone = document.getElementById("interaction");
+let audioStarted = false; // ✅ nouveau flag
 
-    // Sons de pages
-    const pageSounds = [
-      new Audio("PAPRHndl_Page qui tourne (ID 0164)_LS.wav"),
-      new Audio("PAPRHndl_Pages qu on tourne 5 (ID 2212)_LS.wav"),
-      new Audio("PAPRHndl_Pages qu on tourne 9 (ID 2216)_LS.wav")
-    ];
+const img = document.getElementById("image");
+const zone = document.getElementById("interaction");
+const ambiance = document.getElementById("ambiance");
 
-    function playPageSound() {
-      const sound = pageSounds[Math.floor(Math.random() * pageSounds.length)];
-      sound.currentTime = 0;
-      sound.play();
-    }
+// Sons de pages
+const pageSounds = [
+  new Audio("PAPRHndl_Page qui tourne (ID 0164)_LS.wav"),
+  new Audio("PAPRHndl_Pages qu on tourne 5 (ID 2212)_LS.wav"),
+  new Audio("PAPRHndl_Pages qu on tourne 9 (ID 2216)_LS.wav")
+];
 
-    const actions = {
-      2: { text: "C'est où, cet endroit ? :", input: true, expected: "Meiselocker", next: 3 },
-      3: { text: "Entrez le code secret :", input: true, expected: "HZDNZGJXFZM", next: 4 },
-      4: { text: "Cliquez pour ouvrir l’enveloppe.", button: "Ouvrir", next: 5 },
-      5: { text: "Entrez l’adresse exacte :", input: true, expected: "Grotte du Wolfloch", next: 6 },
-      6: { text: "Cliquez pour écouter l’enregistrement.", button: "Écouter", next: 7 },
-      7: { text: "Cliquez pour rentrer chez vous.", button: "Continuer", next: 8 },
-      8: { text: "-------- :", input: true, expected: "violette", next: 9 },
-      9: { text: "Envoyez un e-mail.", mailto: true }
-    };
+function playPageSound() {
+  const sound = pageSounds[Math.floor(Math.random() * pageSounds.length)];
+  sound.currentTime = 0;
+  sound.play();
+}
 
-    function nextPage() {
-      page++;
-      if (page > 9) return;
-      playPageSound();
-      img.src = `${page}.jpg`;
-      const act = actions[page];
-      if (!act) return zone.innerHTML = "";
+const actions = {
+  2: { text: "C'est où, cet endroit ? :", input: true, expected: "Meiselocker", next: 3 },
+  3: { text: "Entrez le code secret :", input: true, expected: "HZDNZGJXFZM", next: 4 },
+  4: { text: "Cliquez pour ouvrir l’enveloppe.", button: "Ouvrir", next: 5 },
+  5: { text: "Entrez l’adresse exacte :", input: true, expected: "Grotte du Wolfloch", next: 6 },
+  6: { text: "Cliquez pour écouter l’enregistrement.", button: "Écouter", next: 7 },
+  7: { text: "Cliquez pour rentrer chez vous.", button: "Continuer", next: 8 },
+  8: { text: "-------- :", input: true, expected: "violette", next: 9 },
+  9: { text: "Envoyez un e-mail.", mailto: true }
+};
 
-      if (act.input) {
-        zone.innerHTML = `
-          <p>${act.text}</p>
-          <input id="rep" placeholder="..." />
-          <button onclick="verif('${act.expected}', ${act.next})">Valider</button>
-        `;
-      } else if (act.button) {
-        zone.innerHTML = `<p>${act.text}</p><button onclick="nextPage()">${act.button}</button>`;
-      } else if (act.mailto) {
-        zone.innerHTML = `<p>${act.text}</p>
-          <a href="mailto:contact@morpheus-experience.com?subject=ENQUETE - Suite&body=Bonjour,%0A%0ANous avons terminé l'enquête.%0A-%0A%0ACordialement" class="link">Envoyer l’e-mail</a>`;
-      }
-    }
+function nextPage() {
+  if (!audioStarted) {
+    ambiance.play(); // ✅ démarrage du son d'ambiance
+    audioStarted = true;
+  }
 
+  page++;
+  if (page > 9) return;
+  playPageSound();
+  img.src = `${page}.jpg`;
+  const act = actions[page];
+  if (!act) return zone.innerHTML = "";
+
+  if (act.input) {
+    zone.innerHTML = `
+      <p>${act.text}</p>
+      <input id="rep" placeholder="..." />
+      <button onclick="verif('${act.expected}', ${act.next})">Valider</button>
+    `;
+  } else if (act.button) {
+    zone.innerHTML = `<p>${act.text}</p><button onclick="nextPage()">${act.button}</button>`;
+  } else if (act.mailto) {
+    zone.innerHTML = `<p>${act.text}</p>
+      <a href="mailto:contact@morpheus-experience.com?subject=ENQUETE - Suite&body=Bonjour,%0A%0ANous avons terminé l'enquête.%0A-%0A%0ACordialement" class="link">Envoyer l’e-mail</a>`;
+  }
+}
     function verif(expected, next) {
       const val = document.getElementById("rep").value.trim().toLowerCase();
       if (val === expected.toLowerCase()) {
