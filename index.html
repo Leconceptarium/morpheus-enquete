@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { background:#0b0a12; color:#fff; font-family:sans-serif; padding:20px; text-align:center; }
     img { max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,.5); }
     .zone { max-width: 600px; margin: auto; }
     input, button { padding: 10px; margin-top: 12px; border-radius: 8px; border: none; }
@@ -14,15 +16,15 @@
 </head>
 <body>
   <div class="zone">
-    <h1 id="titre">Morpheus — Enquête</h1>
     <img id="image" src="1.jpg" alt="Page 1" />
     <div id="interaction">
       <button onclick="nextPage()">Ouvrir le dossier</button>
+    </div>
   </div>
+
 <script>
   let page = 1;
   const img = document.getElementById("image");
-  const titre = document.getElementById("titre");
   const zone = document.getElementById("interaction");
 
   const actions = {
@@ -39,8 +41,7 @@
   function nextPage() {
     page++;
     if (page > 9) return;
-    img.src = `assets/${page}.jpg`;
-    titre.textContent = `Page ${page} — Morpheus`;
+    img.src = `${page}.jpg`;  // <-- Utilise directement les images à la racine
     const act = actions[page];
     if (!act) return zone.innerHTML = "";
 
