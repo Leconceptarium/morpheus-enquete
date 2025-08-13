@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Morpheus Enquête</title>
+  <style>
+    body { background:#0b0a12; color:#fff; font-family:sans-serif; padding:20px; text-align:center; }
+    img { max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,.5); }
+    .zone { max-width: 600px; margin: auto; }
+    input, button { padding: 10px; margin-top: 12px; border-radius: 8px; border: none; }
+    button { background:#fff; color:#000; font-weight: bold; cursor:pointer; }
+    .hidden { display:none; }
+    .disclaimer { margin-top:20px; font-size:13px; opacity:0.7; }
+  </style>
+</head>
+<body>
+  <div class="zone">
+    <h1 id="titre">Morpheus — Enquête</h1>
+    <img id="image" src="assets/1.jpg" alt="Page 1" />
+    <div id="interaction">
+      <p>Bienvenue. Cliquez pour ouvrir le dossier.</p>
+      <button onclick="nextPage()">Ouvrir</button>
+    </div>
+    <div class="disclaimer">
+      L’équipe de Morpheus Expérience ne saurait être tenue responsable des actions ou décisions prises par les joueurs dans le cadre de ce jeu en ligne. Conformément aux articles 1240 et suivants du Code civil, chaque joueur reste pleinement responsable de ses propres actes.
+    </div>
+  </div>
+<script>
+  let page = 1;
+  const img = document.getElementById("image");
+  const titre = document.getElementById("titre");
+  const zone = document.getElementById("interaction");
+
+  const actions = {
+    2: { text: "Entrez le mot de passe :", input: true, expected: "test2", next: 3 },
+    3: { text: "Entrez le code secret :", input: true, expected: "test3", next: 4 },
+    4: { text: "Cliquez pour ouvrir l’enveloppe.", button: "Ouvrir", next: 5 },
+    5: { text: "Entrez l’adresse exacte :", input: true, expected: "12 rue de l'étoile", next: 6 },
+    6: { text: "Cliquez pour écouter l’enregistrement.", button: "Écouter", next: 7 },
+    7: { text: "Cliquez pour rentrer chez vous.", button: "Continuer", next: 8 },
+    8: { text: "Entrez le nom :", input: true, expected: "prénom-nom", next: 9 },
+    9: { text: "Envoyez un e-mail pour conclure l’enquête.", mailto: true }
+  };
+
+  function nextPage() {
+    page++;
+    if (page > 9) return;
+    img.src = `assets/${page}.jpg`;
+    titre.textContent = `Page ${page} — Morpheus`;
+    const act = actions[page];
+    if (!act) return zone.innerHTML = "";
+
+    if (act.input) {
+      zone.innerHTML = `<p>${act.text}</p>
+        <input id="rep" placeholder="..." />
+        <br><button onclick="verif('${act.expected}', ${act.next})">Valider</button>`;
+    } else if (act.button) {
+      zone.innerHTML = `<p>${act.text}</p><button onclick="nextPage()">${act.button}</button>`;
+    } else if (act.mailto) {
+      zone.innerHTML = `<p>${act.text}</p>
+        <a href="mailto:contact@morpheus-experience.com?subject=ENQUETE - Suite&body=Bonjour,%0A%0ANous avons terminé l'enquête.%0A-%0A%0ACordialement" style="color:#fff;text-decoration:underline;">Envoyer l’e-mail</a>`;
+    }
+  }
+
+  function verif(expected, next) {
+    const val = document.getElementById("rep").value.trim().toLowerCase();
+    if (val === expected.toLowerCase()) {
+      page = next - 1;
+      nextPage();
+    } else {
+      alert("Mauvaise réponse.");
+    }
+  }
+</script>
+</body>
+</html>
