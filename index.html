@@ -113,6 +113,8 @@
     </div>
   </div>
 <audio id="ambiance" src="SF-bureau.mp3" autoplay loop></audio>
+const ambiance = document.getElementById("ambiance");
+ambiance.volume = 0.2; // ✅ Son plus doux
   <script>
     let page = 1;
 let audioStarted = false; // ✅ nouveau flag
