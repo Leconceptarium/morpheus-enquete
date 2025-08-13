@@ -30,19 +30,19 @@
     }
 
     #interaction {
-  position: absolute;
-  top: 85%;             /* ⬅️ ça le monte dans l’image */
-  bottom: auto;         /* ⬅️ désactive l'ancrage bas */
-  left: 0;
-  right: 0;
-  background: rgba(0,0,0,0.5);
-  padding: 9px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  border-radius: 12px;
-}
+      position: absolute;
+      top: 85%;
+      bottom: auto;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.5);
+      padding: 9px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      border-radius: 12px;
+    }
 
     input, button {
       padding: 10px 16px;
@@ -61,13 +61,6 @@
       color: #000;
       font-weight: bold;
       cursor: pointer;
-    }
-
-    .disclaimer {
-      font-size: 12px;
-      margin-top: 12px;
-      opacity: 0.7;
-      text-align: center;
     }
 
     a.link {
@@ -89,6 +82,19 @@
     const img = document.getElementById("image");
     const zone = document.getElementById("interaction");
 
+    // Préparation des sons (noms exacts non modifiés)
+    const pageSounds = [
+      new Audio("PAPRHndl_Page qui tourne (ID 0164)_LS.wav"),
+      new Audio("PAPRHndl_Pages qu on tourne 5 (ID 2212)_LS.wav"),
+      new Audio("PAPRHndl_Pages qu on tourne 9 (ID 2216)_LS.wav")
+    ];
+
+    function playPageSound() {
+      const sound = pageSounds[Math.floor(Math.random() * pageSounds.length)];
+      sound.currentTime = 0;
+      sound.play();
+    }
+
     const actions = {
       2: { text: "C'est où, cet endroit ? :", input: true, expected: "Meiselocker", next: 3 },
       3: { text: "Entrez le code secret :", input: true, expected: "HZDNZGJXFZM", next: 4 },
@@ -103,6 +109,7 @@
     function nextPage() {
       page++;
       if (page > 9) return;
+      playPageSound();
       img.src = `${page}.jpg`;
       const act = actions[page];
       if (!act) return zone.innerHTML = "";
