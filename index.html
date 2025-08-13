@@ -1,17 +1,79 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body { background:#0b0a12; color:#fff; font-family:sans-serif; padding:20px; text-align:center; }
-    img { max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,.5); }
-    .zone { max-width: 600px; margin: auto; }
-    input, button { padding: 10px; margin-top: 12px; border-radius: 8px; border: none; }
-    button { background:#fff; color:#000; font-weight: bold; cursor:pointer; }
-    .hidden { display:none; }
-    .disclaimer { margin-top:20px; font-size:13px; opacity:0.7; }
+    body {
+      margin: 0;
+      background: #0b0a12;
+      font-family: sans-serif;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .zone {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .zone img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      display: block;
+    }
+
+    #interaction {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.5);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+
+    input, button {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    input {
+      width: 80%;
+      max-width: 300px;
+    }
+
+    button {
+      background: #fff;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .disclaimer {
+      font-size: 12px;
+      margin-top: 12px;
+      opacity: 0.7;
+      text-align: center;
+    }
+
+    a.link {
+      color: #fff;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -22,50 +84,52 @@
     </div>
   </div>
 
-<script>
-  let page = 1;
-  const img = document.getElementById("image");
-  const zone = document.getElementById("interaction");
+  <script>
+    let page = 1;
+    const img = document.getElementById("image");
+    const zone = document.getElementById("interaction");
 
-  const actions = {
-    2: { text: "Entrez le mot de passe :", input: true, expected: "Meiselocker", next: 3 },
-    3: { text: "Entrez le code secret :", input: true, expected: "HZDNZGJXFZM", next: 4 },
-    4: { text: "Cliquez pour ouvrir l’enveloppe.", button: "Ouvrir", next: 5 },
-    5: { text: "Entrez l’adresse exacte :", input: true, expected: "Grotte du Wolfloch", next: 6 },
-    6: { text: "Cliquez pour écouter l’enregistrement.", button: "Écouter", next: 7 },
-    7: { text: "Cliquez pour rentrer chez vous.", button: "Continuer", next: 8 },
-    8: { text: "-------- :", input: true, expected: "violette", next: 9 },
-    9: { text: "Envoyez un e-mail.", mailto: true }
-  };
+    const actions = {
+      2: { text: "Entrez le mot de passe :", input: true, expected: "Meiselocker", next: 3 },
+      3: { text: "Entrez le code secret :", input: true, expected: "HZDNZGJXFZM", next: 4 },
+      4: { text: "Cliquez pour ouvrir l’enveloppe.", button: "Ouvrir", next: 5 },
+      5: { text: "Entrez l’adresse exacte :", input: true, expected: "Grotte du Wolfloch", next: 6 },
+      6: { text: "Cliquez pour écouter l’enregistrement.", button: "Écouter", next: 7 },
+      7: { text: "Cliquez pour rentrer chez vous.", button: "Continuer", next: 8 },
+      8: { text: "-------- :", input: true, expected: "violette", next: 9 },
+      9: { text: "Envoyez un e-mail.", mailto: true }
+    };
 
-  function nextPage() {
-    page++;
-    if (page > 9) return;
-    img.src = `${page}.jpg`;  // <-- Utilise directement les images à la racine
-    const act = actions[page];
-    if (!act) return zone.innerHTML = "";
+    function nextPage() {
+      page++;
+      if (page > 9) return;
+      img.src = `${page}.jpg`;
+      const act = actions[page];
+      if (!act) return zone.innerHTML = "";
 
-    if (act.input) {
-      zone.innerHTML = `<p>${act.text}</p>
-        <input id="rep" placeholder="..." />
-        <br><button onclick="verif('${act.expected}', ${act.next})">Valider</button>`;
-    } else if (act.button) {
-      zone.innerHTML = `<p>${act.text}</p><button onclick="nextPage()">${act.button}</button>`;
-    } else if (act.mailto) {
-      zone.innerHTML = `<p>${act.text}</p>
-        <a href="mailto:contact@morpheus-experience.com?subject=ENQUETE - Suite&body=Bonjour,%0A%0ANous avons terminé l'enquête.%0A-%0A%0ACordialement" style="color:#fff;text-decoration:underline;">Envoyer l’e-mail</a>`;
+      if (act.input) {
+        zone.innerHTML = `
+          <p>${act.text}</p>
+          <input id="rep" placeholder="..." />
+          <button onclick="verif('${act.expected}', ${act.next})">Valider</button>
+        `;
+      } else if (act.button) {
+        zone.innerHTML = `<p>${act.text}</p><button onclick="nextPage()">${act.button}</button>`;
+      } else if (act.mailto) {
+        zone.innerHTML = `<p>${act.text}</p>
+          <a href="mailto:contact@morpheus-experience.com?subject=ENQUETE - Suite&body=Bonjour,%0A%0ANous avons terminé l'enquête.%0A-%0A%0ACordialement" class="link">Envoyer l’e-mail</a>`;
+      }
     }
-  }
 
-  function verif(expected, next) {
-    const val = document.getElementById("rep").value.trim().toLowerCase();
-    if (val === expected.toLowerCase()) {
-      page = next - 1;
-      nextPage();
-    } else {
-      alert("Mauvaise réponse.");
+    function verif(expected, next) {
+      const val = document.getElementById("rep").value.trim().toLowerCase();
+      if (val === expected.toLowerCase()) {
+        page = next - 1;
+        nextPage();
+      } else {
+        alert("Mauvaise réponse.");
+      }
     }
-  }
-</script>
+  </script>
 </body>
 </html>
