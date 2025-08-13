@@ -31,7 +31,7 @@
 
     #interaction {
       position: absolute;
-      bottom: 40;
+      bottom: 90;
       left: 0;
       right: 0;
       background: rgba(0,0,0,0.5);
@@ -90,7 +90,7 @@
     const zone = document.getElementById("interaction");
 
     const actions = {
-      2: { text: "Entrez le mot de passe :", input: true, expected: "Meiselocker", next: 3 },
+      2: { text: "C'est où, cet endroit ? :", input: true, expected: "Meiselocker", next: 3 },
       3: { text: "Entrez le code secret :", input: true, expected: "HZDNZGJXFZM", next: 4 },
       4: { text: "Cliquez pour ouvrir l’enveloppe.", button: "Ouvrir", next: 5 },
       5: { text: "Entrez l’adresse exacte :", input: true, expected: "Grotte du Wolfloch", next: 6 },
