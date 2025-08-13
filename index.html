@@ -79,7 +79,20 @@ button:hover {
       color: #fff;
       text-decoration: underline;
     }
-  </style>
+    @media (max-width: 600px) {
+  button {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+
+  input {
+    font-size: 14px;
+  }
+
+  #interaction {
+    top: 88%; /* on remonte un peu le bloc sur mobile */
+  }
+}  </style>
 </head>
 <body>
   <div class="zone">
