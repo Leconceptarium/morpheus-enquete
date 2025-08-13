@@ -4,9 +4,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Morpheus Enquête</title>
-  <style>
-    body { background:#0b0a12; color:#fff; font-family:sans-serif; padding:20px; text-align:center; }
     img { max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,.5); }
     .zone { max-width: 600px; margin: auto; }
     input, button { padding: 10px; margin-top: 12px; border-radius: 8px; border: none; }
@@ -20,12 +17,7 @@
     <h1 id="titre">Morpheus — Enquête</h1>
     <img id="image" src="1.jpg" alt="Page 1" />
     <div id="interaction">
-      <p>Bienvenue. Cliquez pour ouvrir le dossier.</p>
-      <button onclick="nextPage()">Ouvrir</button>
-    </div>
-    <div class="disclaimer">
-      L’équipe de Morpheus Expérience ne saurait être tenue responsable des actions ou décisions prises par les joueurs dans le cadre de ce jeu en ligne. Conformément aux articles 1240 et suivants du Code civil, chaque joueur reste pleinement responsable de ses propres actes.
-    </div>
+      <button onclick="nextPage()">Ouvrir le dossier</button>
   </div>
 <script>
   let page = 1;
