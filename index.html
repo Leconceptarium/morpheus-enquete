@@ -276,6 +276,12 @@
         document.querySelectorAll('.click-zone').forEach(z => z.remove());
       }, 5000);
     }
+    document.addEventListener("keydown", function(e) {
+  if (e.key.toLowerCase() === "p") {
+    page = Math.max(1, page - 1); // évite d'aller en-dessous de la page 1
+    showPage(page);
+  }
+});
   </script>
 </body>
 </html>
