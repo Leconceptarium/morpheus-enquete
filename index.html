@@ -110,7 +110,7 @@
     </div>
   </div>
 
-  <!-- Audio ambiance et enregistrement Iris -->
+  <!-- Sons -->
   <audio id="ambiance" src="SF-bureau.mp3" loop></audio>
   <audio id="iris" src="dial cave iris - 18:08:2025 11.37.mp3"></audio>
 
@@ -138,14 +138,50 @@
     }
 
     const actions = {
-      2: { text: "C'est où, cet endroit ? :", input: true, expected: "Meiselocker","le meiselocker","place Saint-Étienne","la place saint étienne","saint étienne",next: 3 },
-      3: { text: "Entrez le code secret :", input: true, expected: "HZDNZGJXFZM", next: 4 },
-      4: { text: "Cliquez pour ouvrir l’enveloppe.", button: "Ouvrir", next: 5 },
-      5: { text: "Entrez l’adresse exacte :", input: true, expected: "Grotte du Wolfloch","Wolfloch" next: 6 },
-      6: { text: "Cliquez pour écouter l’enregistrement.", button: "La suivre", next: 7, playAudio: true },
-      7: { text: "Cliquez pour rentrer chez vous.", button: "Continuer", next: 8 },
-      8: { text: "-------- :", input: true, expected: "violette", next: 9 },
-      9: { text: "Envoyez un e-mail.", mailto: true }
+      2: {
+        text: "C'est où, cet endroit ? :",
+        input: true,
+        expected: ["meiselocker", "le meiselocker", "place saint-étienne", "la place saint étienne", "saint étienne"],
+        next: 3
+      },
+      3: {
+        text: "Entrez le code secret :",
+        input: true,
+        expected: ["HZDNZGJXFZM"],
+        next: 4
+      },
+      4: {
+        text: "Cliquez pour ouvrir l’enveloppe.",
+        button: "Ouvrir",
+        next: 5
+      },
+      5: {
+        text: "Entrez l’adresse exacte :",
+        input: true,
+        expected: ["grotte du wolfloch", "wolfloch"],
+        next: 6
+      },
+      6: {
+        text: "Cliquez pour écouter l’enregistrement.",
+        button: "La suivre",
+        next: 7,
+        playAudio: true
+      },
+      7: {
+        text: "Cliquez pour rentrer chez vous.",
+        button: "Continuer",
+        next: 8
+      },
+      8: {
+        text: "-------- :",
+        input: true,
+        expected: ["violette"],
+        next: 9
+      },
+      9: {
+        text: "Envoyez un e-mail.",
+        mailto: true
+      }
     };
 
     function nextPage() {
@@ -159,14 +195,18 @@
 
       playPageSound();
       img.src = `${page}.jpg`;
+
       const act = actions[page];
-      if (!act) return zone.innerHTML = "";
+      if (!act) {
+        zone.innerHTML = "";
+        return;
+      }
 
       if (act.input) {
         zone.innerHTML = `
           <p>${act.text}</p>
           <input id="rep" placeholder="..." />
-          <button onclick="verif('${act.expected}', ${act.next})">Valider</button>
+          <button onclick="verif(${JSON.stringify(act.expected)}, ${act.next})">Valider</button>
         `;
       } else if (act.button) {
         zone.innerHTML = `<p>${act.text}</p><button onclick="nextPage()">${act.button}</button>`;
@@ -180,9 +220,9 @@
       }
     }
 
-    function verif(expected, next) {
+    function verif(expectedList, next) {
       const val = document.getElementById("rep").value.trim().toLowerCase();
-      if (val === expected.toLowerCase()) {
+      if (expectedList.some(answer => val === answer.toLowerCase())) {
         page = next - 1;
         nextPage();
       } else {
