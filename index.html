@@ -8,7 +8,6 @@
       height: 100%;
       background-color: #000;
     }
-
     body {
       margin: 0;
       background: #0b0a12;
@@ -19,21 +18,18 @@
       align-items: center;
       min-height: 100vh;
     }
-
     .zone {
       position: relative;
       width: 100%;
       max-width: 800px;
     }
-
-    .zone img {
+    .zone img, .zone video {
       width: 100%;
       height: auto;
       border-radius: 12px;
       box-shadow: 0 0 30px rgba(0,0,0,0.5);
       display: block;
     }
-
     #interaction {
       position: absolute;
       top: 82%;
@@ -47,20 +43,17 @@
       gap: 10px;
       border-radius: 12px;
     }
-
     input, button {
       border-radius: 8px;
       border: 2px solid #b8aa92;
       font-size: 18px;
       font-family: 'Georgia', serif;
     }
-
     input {
       padding: 10px;
       width: 80%;
       max-width: 300px;
     }
-
     button {
       background: #f0e6d6;
       color: #2d2b29;
@@ -70,17 +63,14 @@
       cursor: pointer;
       transition: transform 0.1s ease;
     }
-
     button:hover {
       transform: scale(1.03);
       box-shadow: 0 6px 12px rgba(0,0,0,0.3);
     }
-
     a.link {
       color: #fff;
       text-decoration: underline;
     }
-
     @media (max-width: 600px) {
       button {
         font-size: 14px;
@@ -93,24 +83,28 @@
         top: 80%;
       }
     }
-
     @media (min-width: 1024px) {
       .zone img {
         width: 75%;
         margin: auto;
       }
     }
+    .click-zone {
+      position: absolute;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <div class="zone">
+  <div class="zone" id="zone">
     <img id="image" src="1.jpg" alt="Page 1" />
+    <video id="video" style="display:none;" controls></video>
     <div id="interaction">
       <button onclick="nextPage()">Ouvrir le dossier</button>
     </div>
   </div>
 
-  <audio id="ambiance" src="SF-bureau.mp3" </audio>
+  <audio id="ambiance" src="SF-bureau.mp3" loop></audio>
   <audio id="iris" src="dial cave iris - 18:08:2025 11.37.mp3"></audio>
 
   <script>
@@ -118,9 +112,11 @@
     let audioStarted = false;
 
     const img = document.getElementById("image");
+    const video = document.getElementById("video");
     const zone = document.getElementById("interaction");
     const ambiance = document.getElementById("ambiance");
     const iris = document.getElementById("iris");
+    const zoneContainer = document.getElementById("zone");
 
     ambiance.volume = 0.2;
 
@@ -161,27 +157,14 @@
         next: 6
       },
       6: {
-         text: "   ",
+        text: "Cliquez pour écouter l’enregistrement.",
         audio: true,
         next: 7
       },
       7: {
-        text: "   ",
-        button: " Observez la tasse",
-        next: 7,25
-        button: "Observez le tableau",
-        next: 7,50
+        text: "Que souhaitez-vous observer ?",
+        choix: true
       },
-     7,25: {
-        text: "  ",
-        input: true,
-        next: 7
-      },          
-        7,50: {
-        text: "   ",
-        button: 
-        next: 8
-      },      
       8: {
         text: "-------- :",
         input: true,
@@ -204,10 +187,17 @@
       if (page > 9) return;
 
       playPageSound();
-      img.src = `${page}.jpg`;
+      showPage(page);
+    }
 
-      const act = actions[page];
-      if (!act) return zone.innerHTML = "";
+    function showPage(num) {
+      img.style.display = "block";
+      video.style.display = "none";
+      img.src = `${num}.jpg`;
+      zone.innerHTML = "";
+
+      const act = actions[num];
+      if (!act) return;
 
       if (act.input) {
         zone.innerHTML = `
@@ -216,12 +206,14 @@
           <button onclick='verif(${JSON.stringify(act.expected)}, ${act.next})'>Valider</button>
         `;
       } else if (act.button) {
-        zone.innerHTML = `<p>${act.text}</p><button onclick="nextPage()">${act.button}</button>`;
+        zone.innerHTML = `<p>${act.text}</p><button onclick="page=${act.next - 1};nextPage()">${act.button}</button>`;
       } else if (act.audio) {
+        zone.innerHTML = `<p>${act.text}</p><button onclick="playIrisAudio(${act.next})">Écouter l'enregistrement</button><div id="followBtn"></div>`;
+      } else if (act.choix) {
         zone.innerHTML = `
           <p>${act.text}</p>
-          <button onclick="playIrisAudio()">Écouter l'enregistrement</button>
-          <div id="followBtn"></div>
+          <button onclick="observeTasse()">Observer la tasse</button>
+          <button onclick="observeTableau()">Observer le tableau</button>
         `;
       } else if (act.mailto) {
         zone.innerHTML = `<p>${act.text}</p>
@@ -239,13 +231,50 @@
       }
     }
 
-    function playIrisAudio() {
+    function playIrisAudio(next) {
       iris.currentTime = 0;
       iris.play();
       iris.onended = () => {
-        const followBtn = document.getElementById("followBtn");
-        followBtn.innerHTML = `<button onclick="nextPage()">La suivre</button>`;
+        document.getElementById("followBtn").innerHTML = `<button onclick="page=${next - 1};nextPage()">La suivre</button>`;
       };
+    }
+
+    function observeTasse() {
+      img.style.display = "none";
+      video.style.display = "block";
+      zone.innerHTML = "";
+      video.src = "tasse.mp4";
+      video.play();
+      video.onended = () => {
+        page = 6; // retour à la page d’avant les choix
+        showPage(7);
+      };
+    }
+
+    function observeTableau() {
+      page = 7.5;
+      img.src = "7,50.jpg";
+      img.style.display = "block";
+      video.style.display = "none";
+      zone.innerHTML = "";
+
+      // Ajouter une zone cliquable
+      const clickZone = document.createElement("div");
+      clickZone.className = "click-zone";
+      clickZone.style.top = "35%";
+      clickZone.style.left = "35%";
+      clickZone.style.width = "30%";
+      clickZone.style.height = "30%";
+      clickZone.onclick = () => {
+        page = 7.9;
+        nextPage(); // Va à la page 8
+      };
+      zoneContainer.appendChild(clickZone);
+
+      // Supprimer la zone quand on quitte la page
+      setTimeout(() => {
+        document.querySelectorAll('.click-zone').forEach(z => z.remove());
+      }, 5000);
     }
   </script>
 </body>
