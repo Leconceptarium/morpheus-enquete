@@ -37,7 +37,6 @@
     #interaction {
       position: absolute;
       top: 82%;
-      bottom: auto;
       left: 0;
       right: 0;
       background: rgba(0,0,0,0.5);
@@ -87,11 +86,9 @@
         font-size: 14px;
         padding: 10px 16px;
       }
-
       input {
         font-size: 14px;
       }
-
       #interaction {
         top: 80%;
       }
@@ -113,7 +110,9 @@
     </div>
   </div>
 
-  <audio id="ambiance" src="SF-bureau.mp3" </audio>
+  <!-- Audio ambiance et enregistrement Iris -->
+  <audio id="ambiance" src="SF-bureau.mp3" loop></audio>
+  <audio id="iris" src="dial cave iris - 18:08:2025 11.37.mp3"></audio>
 
   <script>
     let page = 1;
@@ -122,7 +121,9 @@
     const img = document.getElementById("image");
     const zone = document.getElementById("interaction");
     const ambiance = document.getElementById("ambiance");
-    ambiance.volume = 0.05; // ✅ Son plus doux
+    const iris = document.getElementById("iris");
+
+    ambiance.volume = 0.05;
 
     const pageSounds = [
       new Audio("PAPRHndl_Page qui tourne (ID 0164)_LS.wav"),
@@ -141,7 +142,7 @@
       3: { text: "Entrez le code secret :", input: true, expected: "HZDNZGJXFZM", next: 4 },
       4: { text: "Cliquez pour ouvrir l’enveloppe.", button: "Ouvrir", next: 5 },
       5: { text: "Entrez l’adresse exacte :", input: true, expected: "Grotte du Wolfloch", next: 6 },
-      6: { text: "Cliquez pour écouter l’enregistrement.", button: "Écouter", next: 7 },
+      6: { text: "Cliquez pour écouter l’enregistrement.", button: "Écouter", next: 7, playAudio: true },
       7: { text: "Cliquez pour rentrer chez vous.", button: "Continuer", next: 8 },
       8: { text: "-------- :", input: true, expected: "violette", next: 9 },
       9: { text: "Envoyez un e-mail.", mailto: true }
@@ -149,7 +150,7 @@
 
     function nextPage() {
       if (!audioStarted) {
-        ambiance.play(); // ✅ Lancement à la première interaction
+        ambiance.play();
         audioStarted = true;
       }
 
@@ -169,6 +170,10 @@
         `;
       } else if (act.button) {
         zone.innerHTML = `<p>${act.text}</p><button onclick="nextPage()">${act.button}</button>`;
+        if (act.playAudio) {
+          iris.currentTime = 0;
+          iris.play();
+        }
       } else if (act.mailto) {
         zone.innerHTML = `<p>${act.text}</p>
           <a href="mailto:contact@morpheus-experience.com?subject=ENQUETE - Suite&body=Bonjour,%0A%0ANous avons terminé l'enquête.%0A-%0A%0ACordialement" class="link">Envoyer l’e-mail</a>`;
