@@ -37,7 +37,6 @@
     #interaction {
       position: absolute;
       top: 82%;
-      bottom: auto;
       left: 0;
       right: 0;
       background: rgba(0,0,0,0.5);
@@ -87,11 +86,9 @@
         font-size: 14px;
         padding: 10px 16px;
       }
-
       input {
         font-size: 14px;
       }
-
       #interaction {
         top: 80%;
       }
@@ -113,9 +110,7 @@
     </div>
   </div>
 
-  <audio id="ambiance" src="SF-bureau.mp3" </audio>
-
-  <audio id="ambiance" src="SF-bureau.mp3" </audio>
+  <audio id="ambiance" src="SF-bureau.mp3" loop></audio>
   <audio id="iris" src="dial cave iris - 18:08:2025 11.37.mp3"></audio>
 
   <script>
@@ -167,7 +162,7 @@
       },
       6: {
         text: "Cliquez pour écouter l’enregistrement.",
-        button: "La suivre",
+        audio: true,
         next: 7
       },
       7: {
@@ -198,6 +193,7 @@
 
       playPageSound();
       img.src = `${page}.jpg`;
+
       const act = actions[page];
       if (!act) return zone.innerHTML = "";
 
@@ -207,18 +203,15 @@
           <input id="rep" placeholder="..." />
           <button onclick='verif(${JSON.stringify(act.expected)}, ${act.next})'>Valider</button>
         `;
-          } else if (act.button) {
-        if (page === 6) {
-          // Page spéciale avec deux boutons
-          zone.innerHTML = `
-            <p>${act.text}</p>
-            <button onclick="playIrisAudio()">Écouter l'enregistrement</button>
-            <button onclick="nextPage()">La suivre</button>
-          `;
-        } else {
-          zone.innerHTML = `<p>${act.text}</p>
-            <button onclick="nextPage()">${act.button}</button>`;
-        } else if (act.mailto) {
+      } else if (act.button) {
+        zone.innerHTML = `<p>${act.text}</p><button onclick="nextPage()">${act.button}</button>`;
+      } else if (act.audio) {
+        zone.innerHTML = `
+          <p>${act.text}</p>
+          <button onclick="playIrisAudio()">Écouter l'enregistrement</button>
+          <div id="followBtn"></div>
+        `;
+      } else if (act.mailto) {
         zone.innerHTML = `<p>${act.text}</p>
           <a href="mailto:contact@morpheus-experience.com?subject=ENQUETE - Suite&body=Bonjour,%0A%0ANous avons terminé l'enquête.%0A-%0A%0ACordialement" class="link">Envoyer l’e-mail</a>`;
       }
@@ -237,8 +230,10 @@
     function playIrisAudio() {
       iris.currentTime = 0;
       iris.play();
-      page = 6; // on déclenche l'étape suivante après lecture
-      nextPage();
+      iris.onended = () => {
+        const followBtn = document.getElementById("followBtn");
+        followBtn.innerHTML = `<button onclick="nextPage()">La suivre</button>`;
+      };
     }
   </script>
 </body>
