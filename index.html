@@ -247,7 +247,7 @@
       video.play();
       video.onended = () => {
         page = 6; // retour à la page d’avant les choix
-        showPage(7);
+        next: 9
       };
     }
 
@@ -267,7 +267,7 @@
       clickZone.style.height = "30%";
       clickZone.onclick = () => {
         page = 7.9;
-        nextPage(8); // Va à la page 8
+         next: 9
       };
       zoneContainer.appendChild(clickZone);
 
