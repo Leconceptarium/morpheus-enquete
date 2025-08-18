@@ -202,12 +202,25 @@
         return;
       }
 
-      if (act.input) {
-        zone.innerHTML = `
-          <p>${act.text}</p>
-          <input id="rep" placeholder="..." />
-          <button onclick="verif(${JSON.stringify(act.expected)}, ${act.next})">Valider</button>
-        `;
+    if (act.input) {
+  zone.innerHTML = `
+    <p>${act.text}</p>
+    <input id="rep" placeholder="..." />
+    <button id="valider">Valider</button>
+  `;
+
+  // Ajout dynamique du listener
+  document.getElementById("valider").addEventListener("click", () => {
+    const val = document.getElementById("rep").value.trim().toLowerCase();
+    const expected = act.expected.map(e => e.toLowerCase());
+    if (expected.includes(val)) {
+      page = act.next - 1;
+      nextPage();
+    } else {
+      alert("Ho non ! Mauvaise réponse.");
+    }
+  });
+}
       } else if (act.button) {
         zone.innerHTML = `<p>${act.text}</p><button onclick="nextPage()">${act.button}</button>`;
         if (act.playAudio) {
