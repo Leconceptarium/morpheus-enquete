@@ -92,6 +92,7 @@
     .click-zone {
       position: absolute;
       cursor: pointer;
+      z-index: 5;
     }
   </style>
 </head>
@@ -104,7 +105,7 @@
     </div>
   </div>
 
-  <audio id="ambiance" src="SF-bureau.mp3"></audio>
+  <audio id="ambiance" src="SF-bureau.mp3" loop></audio>
   <audio id="iris" src="dial cave iris - 18:08:2025 11.37.mp3"></audio>
 
   <script>
@@ -193,8 +194,9 @@
     function showPage(num) {
       img.style.display = "block";
       video.style.display = "none";
-      img.src = `${num}.jpg`;
+      img.src = `${Math.floor(num)}.jpg`;
       zone.innerHTML = "";
+      document.querySelectorAll(".click-zone").forEach(z => z.remove());
 
       const act = actions[num];
       if (!act) return;
@@ -265,16 +267,13 @@
       clickZone.style.width = "25%";
       clickZone.style.height = "30%";
       clickZone.onclick = () => {
-        page = 7.9;
-        nextPage();
+        page = 8;
+        showPage(8);
       };
       zoneContainer.appendChild(clickZone);
-
-      setTimeout(() => {
-        document.querySelectorAll('.click-zone').forEach(z => z.remove());
-      }, 5000);
     }
 
+    // Navigation avec les touches A / P
     document.addEventListener("keydown", function(e) {
       const key = e.key.toLowerCase();
       if (key === "p") {
