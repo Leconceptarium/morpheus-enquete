@@ -104,7 +104,7 @@
     </div>
   </div>
 
-  <audio id="ambiance" src="SF-bureau.mp3" </audio>
+  <audio id="ambiance" src="SF-bureau.mp3"></audio>
   <audio id="iris" src="dial cave iris - 18:08:2025 11.37.mp3"></audio>
 
   <script>
@@ -246,8 +246,8 @@
       video.src = "https://github.com/Leconceptarium/morpheus-enquete/raw/refs/heads/main/Votre%20texte%20de%20paragraphe-2-2.mp4";
       video.play();
       video.onended = () => {
-        page = 6; // retour à la page d’avant les choix
-        next: 9
+        page = 7;
+        showPage(7);
       };
     }
 
@@ -258,7 +258,6 @@
       video.style.display = "none";
       zone.innerHTML = "";
 
-      // Ajouter une zone cliquable
       const clickZone = document.createElement("div");
       clickZone.className = "click-zone";
       clickZone.style.top = "35%";
@@ -267,34 +266,26 @@
       clickZone.style.height = "30%";
       clickZone.onclick = () => {
         page = 7.9;
-         next: 9
+        nextPage();
       };
       zoneContainer.appendChild(clickZone);
 
-      // Supprimer la zone quand on quitte la page
       setTimeout(() => {
         document.querySelectorAll('.click-zone').forEach(z => z.remove());
       }, 5000);
     }
-    document.addEventListener("keydown", function(e) {
-  if (e.key.toLowerCase() === "p") {
-    page = Math.max(1, page - 1); // évite d'aller en-dessous de la page 1
-    showPage(page);
-  }
-});
-    document.addEventListener("keydown", function(e) {
-  const key = e.key.toLowerCase();
 
-  if (key === "p") {
-    page = Math.max(1, page - 1); // Ne va pas en dessous de la page 1
-    showPage(page);
-  }
-
-  if (key === "a") {
-    page = Math.min(9, page + 1); // Ne va pas au-delà de la page 9
-    showPage(page);
-  }
-});
+    document.addEventListener("keydown", function(e) {
+      const key = e.key.toLowerCase();
+      if (key === "p") {
+        page = Math.max(1, page - 1);
+        showPage(page);
+      }
+      if (key === "a") {
+        page = Math.min(9, page + 1);
+        showPage(page);
+      }
+    });
   </script>
 </body>
 </html>
