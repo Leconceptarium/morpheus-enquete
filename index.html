@@ -207,11 +207,18 @@
           <input id="rep" placeholder="..." />
           <button onclick='verif(${JSON.stringify(act.expected)}, ${act.next})'>Valider</button>
         `;
-      } else if (act.button) {
-        const isAudioStep = (page === 6);
-        zone.innerHTML = `<p>${act.text}</p>
-          <button onclick='${isAudioStep ? "playIrisAudio()" : "nextPage()"}'>${act.button}</button>`;
-      } else if (act.mailto) {
+          } else if (act.button) {
+        if (page === 6) {
+          // Page spéciale avec deux boutons
+          zone.innerHTML = `
+            <p>${act.text}</p>
+            <button onclick="playIrisAudio()">Écouter l'enregistrement</button>
+            <button onclick="nextPage()">La suivre</button>
+          `;
+        } else {
+          zone.innerHTML = `<p>${act.text}</p>
+            <button onclick="nextPage()">${act.button}</button>`;
+        } else if (act.mailto) {
         zone.innerHTML = `<p>${act.text}</p>
           <a href="mailto:contact@morpheus-experience.com?subject=ENQUETE - Suite&body=Bonjour,%0A%0ANous avons terminé l'enquête.%0A-%0A%0ACordialement" class="link">Envoyer l’e-mail</a>`;
       }
