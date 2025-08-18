@@ -37,6 +37,7 @@
     #interaction {
       position: absolute;
       top: 82%;
+      bottom: auto;
       left: 0;
       right: 0;
       background: rgba(0,0,0,0.5);
@@ -86,9 +87,11 @@
         font-size: 14px;
         padding: 10px 16px;
       }
+
       input {
         font-size: 14px;
       }
+
       #interaction {
         top: 80%;
       }
@@ -110,7 +113,8 @@
     </div>
   </div>
 
-  <!-- Sons -->
+  <audio id="ambiance" src="SF-bureau.mp3" loop></audio>
+
   <audio id="ambiance" src="SF-bureau.mp3" loop></audio>
   <audio id="iris" src="dial cave iris - 18:08:2025 11.37.mp3"></audio>
 
@@ -123,7 +127,7 @@
     const ambiance = document.getElementById("ambiance");
     const iris = document.getElementById("iris");
 
-    ambiance.volume = 0.05;
+    ambiance.volume = 0.2;
 
     const pageSounds = [
       new Audio("PAPRHndl_Page qui tourne (ID 0164)_LS.wav"),
@@ -164,8 +168,7 @@
       6: {
         text: "Cliquez pour écouter l’enregistrement.",
         button: "La suivre",
-        next: 7,
-        playAudio: true
+        next: 7
       },
       7: {
         text: "Cliquez pour rentrer chez vous.",
@@ -195,52 +198,40 @@
 
       playPageSound();
       img.src = `${page}.jpg`;
-
       const act = actions[page];
-      if (!act) {
-        zone.innerHTML = "";
-        return;
-      }
+      if (!act) return zone.innerHTML = "";
 
-    if (act.input) {
-  zone.innerHTML = `
-    <p>${act.text}</p>
-    <input id="rep" placeholder="..." />
-    <button id="valider">Valider</button>
-  `;
-
-  // Ajout dynamique du listener
-  document.getElementById("valider").addEventListener("click", () => {
-    const val = document.getElementById("rep").value.trim().toLowerCase();
-    const expected = act.expected.map(e => e.toLowerCase());
-    if (expected.includes(val)) {
-      page = act.next - 1;
-      nextPage();
-    } else {
-      alert("Ho non ! Mauvaise réponse.");
-    }
-  });
-}
+      if (act.input) {
+        zone.innerHTML = `
+          <p>${act.text}</p>
+          <input id="rep" placeholder="..." />
+          <button onclick='verif(${JSON.stringify(act.expected)}, ${act.next})'>Valider</button>
+        `;
       } else if (act.button) {
-        zone.innerHTML = `<p>${act.text}</p><button onclick="nextPage()">${act.button}</button>`;
-        if (act.playAudio) {
-          iris.currentTime = 0;
-          iris.play();
-        }
+        const isAudioStep = (page === 6);
+        zone.innerHTML = `<p>${act.text}</p>
+          <button onclick='${isAudioStep ? "playIrisAudio()" : "nextPage()"}'>${act.button}</button>`;
       } else if (act.mailto) {
         zone.innerHTML = `<p>${act.text}</p>
           <a href="mailto:contact@morpheus-experience.com?subject=ENQUETE - Suite&body=Bonjour,%0A%0ANous avons terminé l'enquête.%0A-%0A%0ACordialement" class="link">Envoyer l’e-mail</a>`;
       }
     }
 
-    function verif(expectedList, next) {
+    function verif(expectedArray, next) {
       const val = document.getElementById("rep").value.trim().toLowerCase();
-      if (expectedList.some(answer => val === answer.toLowerCase())) {
+      if (expectedArray.map(e => e.toLowerCase()).includes(val)) {
         page = next - 1;
         nextPage();
       } else {
         alert("Ho non ! Mauvaise réponse.");
       }
+    }
+
+    function playIrisAudio() {
+      iris.currentTime = 0;
+      iris.play();
+      page = 6; // on déclenche l'étape suivante après lecture
+      nextPage();
     }
   </script>
 </body>
