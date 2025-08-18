@@ -282,6 +282,19 @@
     showPage(page);
   }
 });
+    document.addEventListener("keydown", function(e) {
+  const key = e.key.toLowerCase();
+
+  if (key === "p") {
+    page = Math.max(1, page - 1); // Ne va pas en dessous de la page 1
+    showPage(page);
+  }
+
+  if (key === "a") {
+    page = Math.min(9, page + 1); // Ne va pas au-delà de la page 9
+    showPage(page);
+  }
+});
   </script>
 </body>
 </html>
