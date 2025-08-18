@@ -138,11 +138,11 @@
     }
 
     const actions = {
-      2: { text: "C'est où, cet endroit ? :", input: true, expected: "Meiselocker", next: 3 },
+      2: { text: "C'est où, cet endroit ? :", input: true, expected: "Meiselocker","le meiselocker","place Saint-Étienne","la place saint étienne","saint étienne",next: 3 },
       3: { text: "Entrez le code secret :", input: true, expected: "HZDNZGJXFZM", next: 4 },
       4: { text: "Cliquez pour ouvrir l’enveloppe.", button: "Ouvrir", next: 5 },
-      5: { text: "Entrez l’adresse exacte :", input: true, expected: "Grotte du Wolfloch", next: 6 },
-      6: { text: "Cliquez pour écouter l’enregistrement.", button: "Écouter", next: 7, playAudio: true },
+      5: { text: "Entrez l’adresse exacte :", input: true, expected: "Grotte du Wolfloch","Wolfloch" next: 6 },
+      6: { text: "Cliquez pour écouter l’enregistrement.", button: "La suivre", next: 7, playAudio: true },
       7: { text: "Cliquez pour rentrer chez vous.", button: "Continuer", next: 8 },
       8: { text: "-------- :", input: true, expected: "violette", next: 9 },
       9: { text: "Envoyez un e-mail.", mailto: true }
