@@ -262,12 +262,12 @@
       const clickZone = document.createElement("div");
       clickZone.className = "click-zone";
       clickZone.style.top = "35%";
-      clickZone.style.left = "35%";
-      clickZone.style.width = "30%";
+      clickZone.style.left = "60%";
+      clickZone.style.width = "25%";
       clickZone.style.height = "30%";
       clickZone.onclick = () => {
         page = 7.9;
-        nextPage(); // Va à la page 8
+        nextPage(8); // Va à la page 8
       };
       zoneContainer.appendChild(clickZone);
 
